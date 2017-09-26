@@ -12,7 +12,7 @@
                 </a>
                 <!-- Sub menu -->
                 <ul>
-                    <li class="sub-menu"><a href=""><i class="glyphicon glyphicon-home"></i>
+                    <li class="sub-menu"><a href="{{route('user.index')}}"><i class="glyphicon glyphicon-home"></i>
                             Users</a></li>
                 </ul>
                 <!-- Sub menu -->

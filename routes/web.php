@@ -15,10 +15,15 @@
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
 
+Route::group( [ 'prefix' => 'admin' ], function()
+{
 
+Route::resource('/user', 'UserController');
 Route::resource('/role', 'RoleController');
-Route::get('/admin',  ['as' => 'admin.index','uses' => function () {
+Route::get('/index',  ['as' => 'admin.index','uses' => function () {
             return view('admin.index');
         }
     ]);
+});

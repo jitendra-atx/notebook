@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Permission;
 use App\Role;
+use App\User;
 
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\DB;
 
-class RoleController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,9 +18,11 @@ class RoleController extends Controller
     public function index()
     {
         //
-        
-        $roles=Role::all();
-        return view('admin.role.index',compact('roles'));
+
+        $users=User::all();
+        $allRoles=Role::all();
+
+         return view('admin.user',compact(['users','allRoles']));
     }
 
     /**
@@ -32,9 +33,6 @@ class RoleController extends Controller
     public function create()
     {
         //
-        $permissions=Permission::all();
-       return view('admin.role.create',compact('permissions'));
-
     }
 
     /**
@@ -46,17 +44,6 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         //
-
-        //print_r($request->all());
-
-        $role=Role::create($request->except(['permission','_token']));
-       // print_r($role);
-        //die;
-        foreach ($request->permission as $key=>$value){
-            $role->attachPermission($value);
-        }
-        return redirect()->route('role.index')->withMessage('role created');
-       
     }
 
     /**
@@ -79,11 +66,6 @@ class RoleController extends Controller
     public function edit($id)
     {
         //
-        $role=Role::find($id);
-        $permissions=Permission::all();
-        $role_permissions = $role->perms()->pluck('id','id')->toArray();
-
-        return view('admin.role.edit',compact(['role','role_permissions','permissions']));
     }
 
     /**
@@ -96,19 +78,16 @@ class RoleController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $role=Role::find($id);
-        $role->name=$request->name;
-        $role->display_name=$request->display_name;
-        $role->description=$request->description;
-        $role->save();
 
-        DB::table('permission_role')->where('role_id',$id)->delete();
+        $user=User::find($id);
+        $roles=$request->roles;
+        DB::table('role_user')->where('user_id',$id)->delete();
 
-        foreach ($request->permission as $key=>$value){
-            $role->attachPermission($value);
+        foreach ($roles as $role){
+            $user->attachRole($role);
         }
 
-        return redirect()->route('role.index')->withMessage('role Updated');
+        return back()->withMessage('Updated');
     }
 
     /**
@@ -120,7 +99,5 @@ class RoleController extends Controller
     public function destroy($id)
     {
         //
-        DB::table("roles")->where('id',$id)->delete();
-        return back()->withMessage('Role Deleted');
     }
 }

@@ -29,12 +29,6 @@
     		<input type="checkbox"   name="permission[]" value="{{$permission->id}}" > {{$permission->name}} <br>
             @endforeach
     	</div>
-
-
-
-
-
-
     	<button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
